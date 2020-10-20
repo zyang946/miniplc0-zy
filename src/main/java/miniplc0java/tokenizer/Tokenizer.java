@@ -41,7 +41,7 @@ public class Tokenizer {
     private Token lexUInt() throws TokenizeError {
         // 请填空：
         // 直到查看下一个字符不是数字为止:
-        // -- 前进一个字符，并存储这个字符
+        // -- 前进一个字符，并存储这个字符 
         //
         // 解析存储的字符串为无符号整数
         // 解析成功则返回无符号整数类型的token，否则返回编译错误
@@ -69,16 +69,35 @@ public class Tokenizer {
                 return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
 
             case '-':
-                // 填入返回语句
+                return new Token（TokenType.Minus,'-',it.previousPos(),it.currentPos());
                 throw new Error("Not implemented");
 
             case '*':
-                // 填入返回语句
+                return new Token（TokenType.Mult,'*',it.previousPos(),it.currentPos());
                 throw new Error("Not implemented");
 
             case '/':
-                // 填入返回语句
+                return new Token（TokenType.Div,'/',it.previousPos(),it.currentPos());
                 throw new Error("Not implemented");
+
+            case ';':
+                return new Token（TokenType.Semicolon,';',it.previousPos(),it.currentPos());
+                throw new Error("Not implemented");
+            
+            case '=':
+                return new Token（TokenType.Equal,'=',it.previousPos(),it.currentPos());
+                throw new Error("Not implemented");
+
+            case '(':
+                return new Token（TokenType.Lparen,'(',it.previousPos(),it.currentPos());
+                throw new Error("Not implemented");            
+
+            case ')':
+                return new Token（TokenType.Rparen,')',it.previousPos(),it.currentPos());
+                throw new Error("Not implemented");
+                    
+            case ''
+
 
             // 填入更多状态和返回语句
 
