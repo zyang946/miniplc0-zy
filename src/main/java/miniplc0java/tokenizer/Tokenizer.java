@@ -53,8 +53,9 @@ public class Tokenizer {
         it.ptr = it.previousPos();
         it.ptrNext = it.nextPos();
         Pos endPos = it.currentPos();
+        num = removeZero(num);
         try {
-            int Value = Integer.parseInt(str);
+            int Value = Integer.parseInt(num);
         } catch (NumberFormatException e) {     
             e.printStackTrace();
         }
