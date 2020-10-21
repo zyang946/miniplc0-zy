@@ -41,6 +41,24 @@ public class Tokenizer {
     private Token lexUInt() throws TokenizeError {
         // 请填空：
         // 直到查看下一个字符不是数字为止:
+        char next = it.NextChar();
+        it.ptrNext = it.nextPos();
+        String num = null;
+        Pos startPos =it.currentPos();
+        while(Character.isDigit(next)){
+            num += next;
+            next = it.NextChar();
+            it.ptrNext = it.nextPos();
+        }
+        it.ptr = it.previousPos();
+        it.ptrNext = it.nextPos();
+        Pos endPos = it.currentPos();
+        try {
+            int Value = Integer.parseInt(str);
+        } catch (NumberFormatException e) {     
+            e.printStackTrace();
+        }
+        return new Token(TokenType.Uint,value,startPos,endPos);
         // -- 前进一个字符，并存储这个字符 
         //
         // 解析存储的字符串为无符号整数
@@ -54,7 +72,31 @@ public class Tokenizer {
         // 请填空：
         // 直到查看下一个字符不是数字或字母为止:
         // -- 前进一个字符，并存储这个字符
-        //
+        char next = it.NextChar();
+        it.ptrNext = it.nextPos();
+        String value = null;
+        Pos startPos =it.currentPos();
+        while(Character.isDigit(next)||Character.isAlphabetic(next)){
+            value += next;
+            next = it.NextChar();
+            it.ptrNext = it.nextPos();
+        }
+        it.ptr = it.previousPos();
+        it.ptrNext = it.nextPos();
+        Pos endPos = it.currentPos();
+
+        if(value.equals("Begin"))
+            TokenType type = TokenType.Begin;
+        else if(value.equals("End"))
+            TokenType type = TokenType.End;
+        else if(value.equals("Var"))
+            TokenType type = TokenType.Var;
+        else if(value.equals("Const"))
+            TokenType type = TokenType.Const;
+        else if(value.equals("Print"))
+            TokenType type = TokenType.Print;
+        else TokenType type = TokenType.Ident;
+        return new Token(type,value,startPos,endPos);
         // 尝试将存储的字符串解释为关键字
         // -- 如果是关键字，则返回关键字类型的 token
         // -- 否则，返回标识符
@@ -67,7 +109,7 @@ public class Tokenizer {
         switch (it.nextChar()) {
             case '+':
                 return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
-
+                throw new Error("not implemented");
             case '-':
                 return new Token（TokenType.Minus,'-',it.previousPos(),it.currentPos());
                 throw new Error("Not implemented");

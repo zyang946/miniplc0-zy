@@ -90,7 +90,6 @@ public class StringIter {
         }
         return new Pos(ptr.row, ptr.col - 1);
     }
-
     /**
      * 将指针指向下一个字符，并返回当前字符
      */
