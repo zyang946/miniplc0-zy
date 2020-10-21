@@ -1,6 +1,7 @@
 package miniplc0java.tokenizer;
 
 import miniplc0java.error.TokenizeError;
+import miniplc0java.util.Pos;
 import miniplc0java.error.ErrorCode;
 
 public class Tokenizer {
@@ -11,17 +12,17 @@ public class Tokenizer {
         this.it = it;
     }
 
-    // 这里本来是想实现 Iterator<Token> 的，但是 Iterator 不允许抛异常，于是就这样了
+    // 杩欓噷鏈潵鏄兂瀹炵幇 Iterator<Token> 鐨勶紝浣嗘槸 Iterator 涓嶅厑璁告姏寮傚父锛屼簬鏄氨杩欐牱浜�
     /**
-     * 获取下一个 Token
+     * 鑾峰彇涓嬩竴涓� Token
      * 
      * @return
-     * @throws TokenizeError 如果解析有异常则抛出
+     * @throws TokenizeError 濡傛灉瑙ｆ瀽鏈夊紓甯稿垯鎶涘嚭
      */
     public Token nextToken() throws TokenizeError {
         it.readAll();
 
-        // 跳过之前的所有空白字符
+        // 璺宠繃涔嬪墠鐨勬墍鏈夌┖鐧藉瓧绗�
         skipSpaceCharacters();
 
         if (it.isEOF()) {
@@ -39,47 +40,42 @@ public class Tokenizer {
     }
 
     private Token lexUInt() throws TokenizeError {
-        // 请填空：
-        // 直到查看下一个字符不是数字为止:
-        char next = it.NextChar();
+        // 璇峰～绌猴細
+        // 鐩村埌鏌ョ湅涓嬩竴涓瓧绗︿笉鏄暟瀛椾负姝�:
+        char next = it.nextChar();
         it.ptrNext = it.nextPos();
         String num = null;
         Pos startPos =it.currentPos();
         while(Character.isDigit(next)){
             num += next;
-            next = it.NextChar();
+            next = it.nextChar();
             it.ptrNext = it.nextPos();
         }
         it.ptr = it.previousPos();
         it.ptrNext = it.nextPos();
         Pos endPos = it.currentPos();
         num = removeZero(num);
-        try {
-            int Value = Integer.parseInt(num);
-        } catch (NumberFormatException e) {     
-            e.printStackTrace();
-        }
+        int   value = Integer.parseInt(num);
         return new Token(TokenType.Uint,value,startPos,endPos);
-        // -- 前进一个字符，并存储这个字符 
+        // -- 鍓嶈繘涓�涓瓧绗︼紝骞跺瓨鍌ㄨ繖涓瓧绗� 
         //
-        // 解析存储的字符串为无符号整数
-        // 解析成功则返回无符号整数类型的token，否则返回编译错误
+        // 瑙ｆ瀽瀛樺偍鐨勫瓧绗︿覆涓烘棤绗﹀彿鏁存暟
+        // 瑙ｆ瀽鎴愬姛鍒欒繑鍥炴棤绗﹀彿鏁存暟绫诲瀷鐨則oken锛屽惁鍒欒繑鍥炵紪璇戦敊璇�
         //
-        // Token 的 Value 应填写数字的值
-        throw new Error("Not implemented");
+        // Token 鐨� Value 搴斿～鍐欐暟瀛楃殑鍊�+
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
-        // 请填空：
-        // 直到查看下一个字符不是数字或字母为止:
-        // -- 前进一个字符，并存储这个字符
-        char next = it.NextChar();
+        // 璇峰～绌猴細
+        // 鐩村埌鏌ョ湅涓嬩竴涓瓧绗︿笉鏄暟瀛楁垨瀛楁瘝涓烘:
+        // -- 鍓嶈繘涓�涓瓧绗︼紝骞跺瓨鍌ㄨ繖涓瓧绗�
+        char next = it.nextChar();
         it.ptrNext = it.nextPos();
         String value = null;
         Pos startPos =it.currentPos();
         while(Character.isDigit(next)||Character.isAlphabetic(next)){
             value += next;
-            next = it.NextChar();
+            next = it.nextChar();
             it.ptrNext = it.nextPos();
         }
         it.ptr = it.previousPos();
@@ -87,65 +83,53 @@ public class Tokenizer {
         Pos endPos = it.currentPos();
 
         if(value.equals("Begin"))
-            TokenType type = TokenType.Begin;
+            return new Token(TokenType.Begin,value,startPos,endPos);
         else if(value.equals("End"))
-            TokenType type = TokenType.End;
+            return new Token(TokenType.End,value,startPos,endPos);
         else if(value.equals("Var"))
-            TokenType type = TokenType.Var;
+            return new Token(TokenType.Var,value,startPos,endPos);
         else if(value.equals("Const"))
-            TokenType type = TokenType.Const;
+            return new Token(TokenType.Const,value,startPos,endPos);
         else if(value.equals("Print"))
-            TokenType type = TokenType.Print;
-        else TokenType type = TokenType.Ident;
-        return new Token(type,value,startPos,endPos);
-        // 尝试将存储的字符串解释为关键字
-        // -- 如果是关键字，则返回关键字类型的 token
-        // -- 否则，返回标识符
+            return new Token(TokenType.Print,value,startPos,endPos);
+        else            
+            return new Token(TokenType.Ident,value,startPos,endPos);
+        // 灏濊瘯灏嗗瓨鍌ㄧ殑瀛楃涓茶В閲婁负鍏抽敭瀛�
+        // -- 濡傛灉鏄叧閿瓧锛屽垯杩斿洖鍏抽敭瀛楃被鍨嬬殑 token
+        // -- 鍚﹀垯锛岃繑鍥炴爣璇嗙
         //
-        // Token 的 Value 应填写标识符或关键字的字符串
-        throw new Error("Not implemented");
+        // Token 鐨� Value 搴斿～鍐欐爣璇嗙鎴栧叧閿瓧鐨勫瓧绗︿覆
     }
 
     private Token lexOperatorOrUnknown() throws TokenizeError {
         switch (it.nextChar()) {
             case '+':
                 return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
-                throw new Error("not implemented");
             case '-':
-                return new Token（TokenType.Minus,'-',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
-
+                return new Token(TokenType.Minus,'-',it.previousPos(),it.currentPos());
             case '*':
-                return new Token（TokenType.Mult,'*',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
+                return new Token(TokenType.Mult,'*',it.previousPos(),it.currentPos());
 
             case '/':
-                return new Token（TokenType.Div,'/',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
+                return new Token(TokenType.Div,'/',it.previousPos(),it.currentPos());
 
             case ';':
-                return new Token（TokenType.Semicolon,';',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
+                return new Token(TokenType.Semicolon,';',it.previousPos(),it.currentPos());
             
             case '=':
-                return new Token（TokenType.Equal,'=',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
+                return new Token(TokenType.Equal,'=',it.previousPos(),it.currentPos());
 
             case '(':
-                return new Token（TokenType.Lparen,'(',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");            
+                return new Token(TokenType.LParen,'(',it.previousPos(),it.currentPos());         
 
             case ')':
-                return new Token（TokenType.Rparen,')',it.previousPos(),it.currentPos());
-                throw new Error("Not implemented");
-                    
-            case ''
+                return new Token(TokenType.RParen,')',it.previousPos(),it.currentPos());
+                
 
-
-            // 填入更多状态和返回语句
+            // 濉叆鏇村鐘舵�佸拰杩斿洖璇彞
 
             default:
-                // 不认识这个输入，摸了
+                // 涓嶈璇嗚繖涓緭鍏ワ紝鎽镐簡
                 throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
         }
     }
@@ -154,5 +138,12 @@ public class Tokenizer {
         while (!it.isEOF() && Character.isWhitespace(it.peekChar())) {
             it.nextChar();
         }
+    }
+    public static String removeZero(String str) {
+        int len = str.length(), i = 0;
+        while (i < len && str.charAt(i) == '0') {
+            i++;
+        }
+        return str.substring(i);
     }
 }
