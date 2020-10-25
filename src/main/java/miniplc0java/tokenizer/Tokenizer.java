@@ -12,17 +12,17 @@ public class Tokenizer {
         this.it = it;
     }
 
-    // 鏉╂瑩鍣烽張顒佹降閺勵垱鍏傜€圭偟骞� Iterator<Token> 閻ㄥ嫸绱濇担鍡樻Ц Iterator 娑撳秴鍘戠拋鍛婂瀵倸鐖堕敍灞肩艾閺勵垰姘ㄦ潻娆愮壉娴滐拷
+    // 这里本来是想实现 Iterator<Token> 的，但是 Iterator 不允许抛异常，于是就这样了
     /**
-     * 閼惧嘲褰囨稉瀣╃娑擄拷 Token
+     * 获取下一个 Token
      * 
      * @return
-     * @throws TokenizeError 婵″倹鐏夌憴锝嗙€介張澶婄磽鐢ǹ鍨幎娑樺毉
+     * @throws TokenizeError 如果解析有异常则抛出
      */
     public Token nextToken() throws TokenizeError {
         it.readAll();
 
-        // 鐠哄疇绻冩稊瀣閻ㄥ嫭澧嶉張澶屸敄閻ц棄鐡х粭锟�
+        // 跳过之前的所有空白字符
         skipSpaceCharacters();
 
         if (it.isEOF()) {
@@ -40,65 +40,46 @@ public class Tokenizer {
     }
 
     private Token lexUInt() throws TokenizeError {
-        // 鐠囧嘲锝炵粚鐚寸窗
-        // 閻╂潙鍩岄弻銉ф箙娑撳绔存稉顏勭摟缁楋缚绗夐弰顖涙殶鐎涙ぞ璐熷锟�:
-        char next = it.nextChar();
-        it.ptrNext = it.nextPos();
-        String num = null;
+        // 请填空：
+        // 直到查看下一个字符不是数字为止:
+        // -- 前进一个字符，并存储这个字符
+        //
+        // 解析存储的字符串为无符号整数
+        // 解析成功则返回无符号整数类型的token，否则返回编译错误
+        //
+        // Token 的 Value 应填写数字的值
         Pos startPos =it.currentPos();
-        while(Character.isDigit(next)){
-            num += next;
-            next = it.nextChar();
-            it.ptrNext = it.nextPos();
+        char peek = it.peekChar();
+        String num = "";
+        while(Character.isDigit(peek)){
+            num += it.nextChar();
+            peek = it.peekChar();
         }
-        it.ptr = it.previousPos();
-        it.ptrNext = it.nextPos();
         Pos endPos = it.currentPos();
-        num = removeZero(num);
-        int   value = Integer.parseInt(num);
-        return new Token(TokenType.Uint,value,startPos,endPos);
-        // -- 閸撳秷绻樻稉锟芥稉顏勭摟缁楋讣绱濋獮璺虹摠閸屻劏绻栨稉顏勭摟缁楋拷 
-        //
-        // 鐟欙絾鐎界€涙ê鍋嶉惃鍕摟缁楋缚瑕嗘稉鐑樻￥缁楋箑褰块弫瀛樻殶
-        // 鐟欙絾鐎介幋鎰閸掓瑨绻戦崶鐐存￥缁楋箑褰块弫瀛樻殶缁鐎烽惃鍓噊ken閿涘苯鎯侀崚娆掔箲閸ョ偟绱拠鎴︽晩鐠囷拷
-        //
-        // Token 閻拷 Value 鎼存柨锝為崘娆愭殶鐎涙娈戦崐锟�+
+        return new Token(TokenType.Uint,num,startPos,endPos);
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
-        // 鐠囧嘲锝炵粚鐚寸窗
-        // 閻╂潙鍩岄弻銉ф箙娑撳绔存稉顏勭摟缁楋缚绗夐弰顖涙殶鐎涙鍨ㄧ€涙鐦濇稉鐑橆剾:
-        // -- 閸撳秷绻樻稉锟芥稉顏勭摟缁楋讣绱濋獮璺虹摠閸屻劏绻栨稉顏勭摟缁楋拷
-        char next = it.nextChar();
-        it.ptrNext = it.nextPos();
-        String value = null;
         Pos startPos =it.currentPos();
-        while(Character.isDigit(next)||Character.isAlphabetic(next)){
-            value += next;
-            next = it.nextChar();
-            it.ptrNext = it.nextPos();
+        char peek = it.peekChar();
+        String value = "";
+        while(Character.isDigit(peek)||Character.isAlphabetic(peek)){
+            value += it.nextChar();
+            peek = it.peekChar();
         }
-        it.ptr = it.previousPos();
-        it.ptrNext = it.nextPos();
         Pos endPos = it.currentPos();
-
-        if(value.equals("Begin"))
+        if(value.equals("begin"))
             return new Token(TokenType.Begin,value,startPos,endPos);
-        else if(value.equals("End"))
+        else if(value.equals("end"))
             return new Token(TokenType.End,value,startPos,endPos);
-        else if(value.equals("Var"))
+        else if(value.equals("var"))
             return new Token(TokenType.Var,value,startPos,endPos);
-        else if(value.equals("Const"))
+        else if(value.equals("const"))
             return new Token(TokenType.Const,value,startPos,endPos);
-        else if(value.equals("Print"))
+        else if(value.equals("print"))
             return new Token(TokenType.Print,value,startPos,endPos);
         else            
             return new Token(TokenType.Ident,value,startPos,endPos);
-        // 鐏忔繆鐦亸鍡楃摠閸屻劎娈戠€涙顑佹稉鑼缎掗柌濠佽礋閸忔娊鏁€涳拷
-        // -- 婵″倹鐏夐弰顖氬彠闁款喖鐡ч敍灞藉灟鏉╂柨娲栭崗鎶芥暛鐎涙琚崹瀣畱 token
-        // -- 閸氾箑鍨敍宀冪箲閸ョ偞鐖ｇ拠鍡欘儊
-        //
-        // Token 閻拷 Value 鎼存柨锝為崘娆愮垼鐠囧棛顑侀幋鏍у彠闁款喖鐡ч惃鍕摟缁楋缚瑕�
     }
 
     private Token lexOperatorOrUnknown() throws TokenizeError {
@@ -124,12 +105,9 @@ public class Tokenizer {
 
             case ')':
                 return new Token(TokenType.RParen,')',it.previousPos(),it.currentPos());
-                
-
-            // 婵夘偄鍙嗛弴鏉戭樋閻樿埖锟戒礁鎷版潻鏂挎礀鐠囶厼褰�
 
             default:
-                // 娑撳秷顓荤拠鍡氱箹娑擃亣绶崗銉礉閹介晲绨�
+                // 不认识这个输入，摸了
                 throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
         }
     }
@@ -138,12 +116,5 @@ public class Tokenizer {
         while (!it.isEOF() && Character.isWhitespace(it.peekChar())) {
             it.nextChar();
         }
-    }
-    public static String removeZero(String str) {
-        int len = str.length(), i = 0;
-        while (i < len && str.charAt(i) == '0') {
-            i++;
-        }
-        return str.substring(i);
     }
 }
