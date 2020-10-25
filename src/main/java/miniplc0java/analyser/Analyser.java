@@ -440,7 +440,7 @@ public final class Analyser {
         } else if (check(TokenType.Uint)) {
             // 是整数
             // 加载整数值
-            int value = Integer.parseInt((String) next().getValue());
+            int value = (int) next().getValue();
             instructions.add(new Instruction(Operation.LIT, value));
         } else if (check(TokenType.LParen)) {
             // 是表达式

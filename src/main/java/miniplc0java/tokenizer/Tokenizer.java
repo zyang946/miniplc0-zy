@@ -56,7 +56,8 @@ public class Tokenizer {
             peek = it.peekChar();
         }
         Pos endPos = it.currentPos();
-        return new Token(TokenType.Uint,num,startPos,endPos);
+        int value = Integer.parseInt(num);
+        return new Token(TokenType.Uint,value,startPos,endPos);
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
