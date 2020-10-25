@@ -12,126 +12,126 @@ public class Tokenizer {
         this.it = it;
     }
 
-    // 閺夆晜鐟╅崳鐑藉嫉椤掍焦闄嶉柡鍕靛灡閸忓倻鈧湱鍋熼獮锟� Iterator<Token> 闁汇劌瀚哥槐婵囨媴閸℃ɑ笑 Iterator 濞戞挸绉撮崢鎴犳媼閸涘﹤顫旂€殿喖鍊搁悥鍫曟晬鐏炶偐鑹鹃柡鍕靛灠濮樸劍娼诲▎鎰濞存粣鎷�
+    // 闁哄鏅滈悷鈺呭闯閻戣棄瀚夋い鎺嶇劍闂勫秹鏌￠崟闈涚仭闁稿繐鍊婚埀顒€婀遍崑鐔肩嵁閿燂拷 Iterator<Token> 闂佹眹鍔岀€氬摜妲愬┑鍥ㄥ闁糕剝蓱绗� Iterator 婵炴垶鎸哥粔鎾储閹寸姵濯奸柛娑橈工椤梻鈧鍠栭崐鎼佹偉閸洘鏅悘鐐跺亹閼归箖鏌￠崟闈涚仩婵ǜ鍔嶅璇测枎閹邦喖顥庢繛瀛樼玻閹凤拷
     /**
-     * 闁兼儳鍢茶ぐ鍥ㄧ▔鐎ｂ晝顏卞☉鎿勬嫹 Token
+     * 闂佸吋鍎抽崲鑼躲亹閸ャ劎鈻旈悗锝傛櫇椤忓崬鈽夐幙鍕 Token
      * 
      * @return
-     * @throws TokenizeError 濠碘€冲€归悘澶屾喆閿濆棛鈧粙寮垫径濠勭＝閻㈩垳枪閸垶骞庡☉妯烘瘔
+     * @throws TokenizeError 婵犵鈧啿鈧綊鎮樻径灞惧枂闁挎繂妫涢埀顑跨矙瀵灚寰勬繝鍕紳闁汇埄鍨虫灙闁割煈鍨堕獮搴♀槈濡儤鐦�
      */
     public Token nextToken() throws TokenizeError {
-        it.readAll();
+        // it.readAll();
 
-        // 閻犲搫鐤囩换鍐╃▕鐎ｎ亜顤呴柣銊ュ婢у秹寮垫径灞告晞闁谎嗘閻⊙呯箔閿燂拷
-        skipSpaceCharacters();
+        // // 闁荤姴鎼悿鍥╂崲閸愨晝鈻曢悗锝庝簻椤ゅ懘鏌ｉ妸銉ヮ仾濠⒀冪Ч瀵灚寰勭仦鍛婃櫈闂佽皫鍡橆棄闁烩姍鍛當闁跨噦鎷�
+        // skipSpaceCharacters();
 
-        if (it.isEOF()) {
-            return new Token(TokenType.EOF, "", it.currentPos(), it.currentPos());
-        }
+        // if (it.isEOF()) {
+        //     return new Token(TokenType.EOF, "", it.currentPos(), it.currentPos());
+        // }
 
-        char peek = it.peekChar();
-        if (Character.isDigit(peek)) {
-            return lexUInt();
-        } else if (Character.isAlphabetic(peek)) {
-            return lexIdentOrKeyword();
-        } else {
-            return lexOperatorOrUnknown();
-        }
+        // char peek = it.peekChar();
+        // if (Character.isDigit(peek)) {
+        //     return lexUInt();
+        // } else if (Character.isAlphabetic(peek)) {
+        //     return lexIdentOrKeyword();
+        // } else {
+        //     return lexOperatorOrUnknown();
+        // }
     }
 
     private Token lexUInt() throws TokenizeError {
-        // 閻犲洤鍢查敐鐐电矚閻氬绐�
-        // 闁烩晜娼欓崺宀勫蓟閵壯勭畽濞戞挸顑勭粩瀛樼▔椤忓嫮鎽熺紒妤嬬細缁楀寮伴娑欐閻庢稒銇炵拹鐔奉潰閿燂拷:
-        char next = it.nextChar();
-        it.ptrNext = it.nextPos();
-        String num = null;
-        Pos startPos =it.currentPos();
-        while(Character.isDigit(next)){
-            num += next;
-            next = it.nextChar();
-            it.ptrNext = it.nextPos();
-        }
-        it.ptr = it.previousPos();
-        it.ptrNext = it.nextPos();
-        Pos endPos = it.currentPos();
-        num = removeZero(num);
-        int   value = Integer.parseInt(num);
-        return new Token(TokenType.Uint,value,startPos,endPos);
-        // -- 闁告挸绉风换妯荤▔閿熻姤绋夐鍕憻缂佹璁ｇ槐婵嬬嵁鐠鸿櫣鎽犻柛灞诲姀缁绘牗绋夐鍕憻缂佹鎷� 
-        //
-        // 閻熸瑱绲鹃悗鐣屸偓娑櫭崑宥夋儍閸曨偆鎽熺紒妤嬬細鐟曞棙绋夐悜妯伙骏缂佹绠戣ぐ鍧楀极鐎涙ɑ娈�
-        // 閻熸瑱绲鹃悗浠嬪箣閹邦剙顫犻柛鎺撶懆缁绘垿宕堕悙瀛橈骏缂佹绠戣ぐ鍧楀极鐎涙ɑ娈剁紒顐ヮ嚙閻庣兘鎯冮崜鍣妅en闁挎稑鑻幆渚€宕氬▎鎺旂闁搞儳鍋熺槐顏嗘嫚閹达附鏅╅悹鍥锋嫹
-        //
-        // Token 闁活煉鎷� Value 閹煎瓨鏌ㄩ敐鐐哄礃濞嗘劖娈堕悗娑欘殘濞堟垿宕愰敓锟�+
+        // // 闁荤姴娲ら崲鏌ユ晲閻愮數鐭氶柣姘嚟缁愶拷
+        // // 闂佺儵鏅滃娆撳春瀹€鍕摕闁靛／鍕暯婵炴垶鎸搁鍕博鐎涙鈻旀い蹇撳閹界喓绱掑Δ瀣窗缂佹顦靛浼搭敍濞戞瑦顔嶉柣搴㈢⊕閵囩偟鎷归悢濂夋桨闁跨噦鎷�:
+        // char next = it.nextChar();
+        // it.ptrNext = it.nextPos();
+        // String num = null;
+        // Pos startPos =it.currentPos();
+        // while(Character.isDigit(next)){
+        //     num += next;
+        //     next = it.nextChar();
+        //     it.ptrNext = it.nextPos();
+        // }
+        // it.ptr = it.previousPos();
+        // it.ptrNext = it.nextPos();
+        // Pos endPos = it.currentPos();
+        // num = removeZero(num);
+        // int   value = Integer.parseInt(num);
+        // return new Token(TokenType.Uint,value,startPos,endPos);
+        // // -- 闂佸憡鎸哥粔椋庢崲濡崵鈻旈柨鐔诲Г缁嬪顢旈崟顓熸喕缂備焦顨愮拋锝囨濠靛宓侀悹楦挎閹界娀鏌涚仦璇插缂佺粯鐗楃粙澶愵敂閸曨厽鎲荤紓浣诡殣閹凤拷 
+        // //
+        // // 闁荤喐鐟辩徊楣冩倵閻ｅ备鍋撳☉娅亪宕戝澶嬪剭闁告洦鍋嗛幗鐔虹磼濡ゅ绱伴悷鏇炴缁嬪鎮滃Ο浼欓獜缂備焦顨愮粻鎴ｃ亹閸ф鏋侀悗娑櫳戝▓锟�
+        // // 闁荤喐鐟辩徊楣冩倵娴犲绠ｉ柟閭﹀墮椤娀鏌涢幒鎾舵噯缂佺粯鍨垮畷鍫曟倷鐎涙﹫楠忕紓浣诡殣缁犳垼銇愰崸妤€鏋侀悗娑櫳戝▓鍓佺磼椤愩儺鍤欓柣搴ｅ厴閹啴宕滈崳濡卐n闂佹寧绋戦懟顖炲箚娓氣偓瀹曟艾鈻庨幒鏃傤唹闂佹悶鍎抽崑鐔烘椤忓棙瀚氶柟杈鹃檮閺呪晠鎮归崶閿嬪
+        // //
+        // // Token 闂佹椿鐓夐幏锟� Value 闁圭厧鐡ㄩ弻銊╂晲閻愬搫绀冩繛鍡樺姈濞堝爼鎮楀☉娆樻畼婵炲牊鍨垮畷鎰版晸閿燂拷+
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
-        // 閻犲洤鍢查敐鐐电矚閻氬绐�
-        // 闁烩晜娼欓崺宀勫蓟閵壯勭畽濞戞挸顑勭粩瀛樼▔椤忓嫮鎽熺紒妤嬬細缁楀寮伴娑欐閻庢稒顨嗛崹銊р偓娑欘殕閻︽繃绋夐悜姗嗗壘:
-        // -- 闁告挸绉风换妯荤▔閿熻姤绋夐鍕憻缂佹璁ｇ槐婵嬬嵁鐠鸿櫣鎽犻柛灞诲姀缁绘牗绋夐鍕憻缂佹鎷�
-        char next = it.nextChar();
-        it.ptrNext = it.nextPos();
-        String value = null;
-        Pos startPos =it.currentPos();
-        while(Character.isDigit(next)||Character.isAlphabetic(next)){
-            value += next;
-            next = it.nextChar();
-            it.ptrNext = it.nextPos();
-        }
-        it.ptr = it.previousPos();
-        it.ptrNext = it.nextPos();
-        Pos endPos = it.currentPos();
+        // // 闁荤姴娲ら崲鏌ユ晲閻愮數鐭氶柣姘嚟缁愶拷
+        // // 闂佺儵鏅滃娆撳春瀹€鍕摕闁靛／鍕暯婵炴垶鎸搁鍕博鐎涙鈻旀い蹇撳閹界喓绱掑Δ瀣窗缂佹顦靛浼搭敍濞戞瑦顔嶉柣搴㈢⊕椤ㄥ棝宕归妸褉鍋撳☉娆樻畷闁伙附绻冪粙澶愭倻濮楀棗澹�:
+        // // -- 闂佸憡鎸哥粔椋庢崲濡崵鈻旈柨鐔诲Г缁嬪顢旈崟顓熸喕缂備焦顨愮拋锝囨濠靛宓侀悹楦挎閹界娀鏌涚仦璇插缂佺粯鐗楃粙澶愵敂閸曨厽鎲荤紓浣诡殣閹凤拷
+        // char next = it.nextChar();
+        // it.ptrNext = it.nextPos();
+        // String value = null;
+        // Pos startPos =it.currentPos();
+        // while(Character.isDigit(next)||Character.isAlphabetic(next)){
+        //     value += next;
+        //     next = it.nextChar();
+        //     it.ptrNext = it.nextPos();
+        // }
+        // it.ptr = it.previousPos();
+        // it.ptrNext = it.nextPos();
+        // Pos endPos = it.currentPos();
 
-        if(value.equals("Begin"))
-            return new Token(TokenType.Begin,value,startPos,endPos);
-        else if(value.equals("End"))
-            return new Token(TokenType.End,value,startPos,endPos);
-        else if(value.equals("Var"))
-            return new Token(TokenType.Var,value,startPos,endPos);
-        else if(value.equals("Const"))
-            return new Token(TokenType.Const,value,startPos,endPos);
-        else if(value.equals("Print"))
-            return new Token(TokenType.Print,value,startPos,endPos);
-        else            
-            return new Token(TokenType.Ident,value,startPos,endPos);
-        // 閻忓繑绻嗛惁顖滀焊閸℃鎽犻柛灞诲妿濞堟垹鈧稒顨堥浣圭▔閼肩紟鎺楁煂婵犱浇绀嬮柛蹇斿▕閺侇厾鈧冻鎷�
-        // -- 濠碘€冲€归悘澶愬及椤栨艾褰犻梺娆惧枛閻⊙囨晬鐏炶棄鐏熼弶鈺傛煥濞叉牠宕楅幎鑺ユ殯閻庢稒顨堢悮顐﹀垂鐎ｎ剚鐣� token
-        // -- 闁告熬绠戦崹顖炴晬瀹€鍐闁搞儳鍋為悥锝囨嫚閸℃瑯鍎�
-        //
-        // Token 闁活煉鎷� Value 閹煎瓨鏌ㄩ敐鐐哄礃濞嗘劗鍨奸悹鍥ф椤戜線骞嬮弽褍褰犻梺娆惧枛閻⊙囨儍閸曨偆鎽熺紒妤嬬細鐟曪拷
+        // if(value.equals("Begin"))
+        //     return new Token(TokenType.Begin,value,startPos,endPos);
+        // else if(value.equals("End"))
+        //     return new Token(TokenType.End,value,startPos,endPos);
+        // else if(value.equals("Var"))
+        //     return new Token(TokenType.Var,value,startPos,endPos);
+        // else if(value.equals("Const"))
+        //     return new Token(TokenType.Const,value,startPos,endPos);
+        // else if(value.equals("Print"))
+        //     return new Token(TokenType.Print,value,startPos,endPos);
+        // else            
+        //     return new Token(TokenType.Ident,value,startPos,endPos);
+        // // 闁诲繐绻戠换鍡涙儊椤栨粈鐒婇柛鈩冾殘閹界娀鏌涚仦璇插婵炲牊鍨归埀顒佺⊕椤ㄥ牓顢栨担鍦枖闁艰偐绱熼幒妤佺厒濠电姳娴囩粈瀣煕韫囨柨鈻曢柡渚囧幘閳ь剚鍐婚幏锟�
+        // // -- 婵犵鈧啿鈧綊鎮樻径鎰強妞ゆ牗鑹捐ぐ鐘绘⒑濞嗘儳鏋涢柣鈯欏洦鏅悘鐐舵閻忕喖寮堕埡鍌涚叆婵炲弶鐗犲畷妤呭箮閼恒儲娈柣搴㈢⊕椤ㄥ牏鎮锕€鍨傞悗锝庡墯閻ｏ拷 token
+        // // -- 闂佸憡鐔粻鎴﹀垂椤栫偞鏅€光偓閸愵亞顔夐梺鎼炲劤閸嬬偤鎮ラ敐鍥ㄥ珰闁糕剝鐟崕锟�
+        // //
+        // // Token 闂佹椿鐓夐幏锟� Value 闁圭厧鐡ㄩ弻銊╂晲閻愬搫绀冩繛鍡樺姉閸ㄥジ鎮归崶褎顥犳い鎴滅窔楠炲寮借瑜扮娀姊哄▎鎯ф灈闁烩姍鍥ㄥ剭闁告洦鍋嗛幗鐔虹磼濡ゅ绱伴悷鏇嫹
     }
 
     private Token lexOperatorOrUnknown() throws TokenizeError {
-        switch (it.nextChar()) {
-            case '+':
-                return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
-            case '-':
-                return new Token(TokenType.Minus,'-',it.previousPos(),it.currentPos());
-            case '*':
-                return new Token(TokenType.Mult,'*',it.previousPos(),it.currentPos());
+        // switch (it.nextChar()) {
+        //     case '+':
+        //         return new Token(TokenType.Plus, '+', it.previousPos(), it.currentPos());
+        //     case '-':
+        //         return new Token(TokenType.Minus,'-',it.previousPos(),it.currentPos());
+        //     case '*':
+        //         return new Token(TokenType.Mult,'*',it.previousPos(),it.currentPos());
 
-            case '/':
-                return new Token(TokenType.Div,'/',it.previousPos(),it.currentPos());
+        //     case '/':
+        //         return new Token(TokenType.Div,'/',it.previousPos(),it.currentPos());
 
-            case ';':
-                return new Token(TokenType.Semicolon,';',it.previousPos(),it.currentPos());
+        //     case ';':
+        //         return new Token(TokenType.Semicolon,';',it.previousPos(),it.currentPos());
             
-            case '=':
-                return new Token(TokenType.Equal,'=',it.previousPos(),it.currentPos());
+        //     case '=':
+        //         return new Token(TokenType.Equal,'=',it.previousPos(),it.currentPos());
 
-            case '(':
-                return new Token(TokenType.LParen,'(',it.previousPos(),it.currentPos());         
+        //     case '(':
+        //         return new Token(TokenType.LParen,'(',it.previousPos(),it.currentPos());         
 
-            case ')':
-                return new Token(TokenType.RParen,')',it.previousPos(),it.currentPos());
+        //     case ')':
+        //         return new Token(TokenType.RParen,')',it.previousPos(),it.currentPos());
                 
 
-            // 濠靛鍋勯崣鍡涘即閺夋埈妯嬮柣妯垮煐閿熸垝绀侀幏鐗堟交閺傛寧绀€閻犲浂鍘艰ぐ锟�
+        //     // 婵犻潧顦介崑鍕矗閸℃稑鍗抽柡澶嬪焾濡鏌ｅΟ鍨厫闁跨喐鍨濈粈渚€骞忛悧鍫熶氦闁哄倹瀵х粈鈧柣鐘叉祩閸樿壈銇愰敓锟�
 
-            default:
-                // 濞戞挸绉烽鑽ゆ嫚閸℃氨绠瑰☉鎿冧海缁额參宕楅妷顖滅闁逛粙鏅茬花锟�
-                throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
-        }
+        //     default:
+        //         // 婵炴垶鎸哥粔鐑筋敇閼姐倖瀚氶柛鈩冩皑缁犵懓鈽夐幙鍐ф捣缂侀鍙冨畷妤呭Ψ椤栨粎顦梺閫涚矙閺呰尙鑺遍敓锟�
+        //         throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
+        // }
     }
 
     private void skipSpaceCharacters() {
