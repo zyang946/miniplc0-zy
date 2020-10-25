@@ -12,17 +12,17 @@ public class Tokenizer {
         this.it = it;
     }
 
-    // 杩欓噷鏈潵鏄兂瀹炵幇 Iterator<Token> 鐨勶紝浣嗘槸 Iterator 涓嶅厑璁告姏寮傚父锛屼簬鏄氨杩欐牱浜�
+    // 鏉╂瑩鍣烽張顒佹降閺勵垱鍏傜€圭偟骞� Iterator<Token> 閻ㄥ嫸绱濇担鍡樻Ц Iterator 娑撳秴鍘戠拋鍛婂瀵倸鐖堕敍灞肩艾閺勵垰姘ㄦ潻娆愮壉娴滐拷
     /**
-     * 鑾峰彇涓嬩竴涓� Token
+     * 閼惧嘲褰囨稉瀣╃娑擄拷 Token
      * 
      * @return
-     * @throws TokenizeError 濡傛灉瑙ｆ瀽鏈夊紓甯稿垯鎶涘嚭
+     * @throws TokenizeError 婵″倹鐏夌憴锝嗙€介張澶婄磽鐢ǹ鍨幎娑樺毉
      */
     public Token nextToken() throws TokenizeError {
         it.readAll();
 
-        // 璺宠繃涔嬪墠鐨勬墍鏈夌┖鐧藉瓧绗�
+        // 鐠哄疇绻冩稊瀣閻ㄥ嫭澧嶉張澶屸敄閻ц棄鐡х粭锟�
         skipSpaceCharacters();
 
         if (it.isEOF()) {
@@ -40,8 +40,8 @@ public class Tokenizer {
     }
 
     private Token lexUInt() throws TokenizeError {
-        // 璇峰～绌猴細
-        // 鐩村埌鏌ョ湅涓嬩竴涓瓧绗︿笉鏄暟瀛椾负姝�:
+        // 鐠囧嘲锝炵粚鐚寸窗
+        // 閻╂潙鍩岄弻銉ф箙娑撳绔存稉顏勭摟缁楋缚绗夐弰顖涙殶鐎涙ぞ璐熷锟�:
         char next = it.nextChar();
         it.ptrNext = it.nextPos();
         String num = null;
@@ -57,18 +57,18 @@ public class Tokenizer {
         num = removeZero(num);
         int   value = Integer.parseInt(num);
         return new Token(TokenType.Uint,value,startPos,endPos);
-        // -- 鍓嶈繘涓�涓瓧绗︼紝骞跺瓨鍌ㄨ繖涓瓧绗� 
+        // -- 閸撳秷绻樻稉锟芥稉顏勭摟缁楋讣绱濋獮璺虹摠閸屻劏绻栨稉顏勭摟缁楋拷 
         //
-        // 瑙ｆ瀽瀛樺偍鐨勫瓧绗︿覆涓烘棤绗﹀彿鏁存暟
-        // 瑙ｆ瀽鎴愬姛鍒欒繑鍥炴棤绗﹀彿鏁存暟绫诲瀷鐨則oken锛屽惁鍒欒繑鍥炵紪璇戦敊璇�
+        // 鐟欙絾鐎界€涙ê鍋嶉惃鍕摟缁楋缚瑕嗘稉鐑樻￥缁楋箑褰块弫瀛樻殶
+        // 鐟欙絾鐎介幋鎰閸掓瑨绻戦崶鐐存￥缁楋箑褰块弫瀛樻殶缁鐎烽惃鍓噊ken閿涘苯鎯侀崚娆掔箲閸ョ偟绱拠鎴︽晩鐠囷拷
         //
-        // Token 鐨� Value 搴斿～鍐欐暟瀛楃殑鍊�+
+        // Token 閻拷 Value 鎼存柨锝為崘娆愭殶鐎涙娈戦崐锟�+
     }
 
     private Token lexIdentOrKeyword() throws TokenizeError {
-        // 璇峰～绌猴細
-        // 鐩村埌鏌ョ湅涓嬩竴涓瓧绗︿笉鏄暟瀛楁垨瀛楁瘝涓烘:
-        // -- 鍓嶈繘涓�涓瓧绗︼紝骞跺瓨鍌ㄨ繖涓瓧绗�
+        // 鐠囧嘲锝炵粚鐚寸窗
+        // 閻╂潙鍩岄弻銉ф箙娑撳绔存稉顏勭摟缁楋缚绗夐弰顖涙殶鐎涙鍨ㄧ€涙鐦濇稉鐑橆剾:
+        // -- 閸撳秷绻樻稉锟芥稉顏勭摟缁楋讣绱濋獮璺虹摠閸屻劏绻栨稉顏勭摟缁楋拷
         char next = it.nextChar();
         it.ptrNext = it.nextPos();
         String value = null;
@@ -94,11 +94,11 @@ public class Tokenizer {
             return new Token(TokenType.Print,value,startPos,endPos);
         else            
             return new Token(TokenType.Ident,value,startPos,endPos);
-        // 灏濊瘯灏嗗瓨鍌ㄧ殑瀛楃涓茶В閲婁负鍏抽敭瀛�
-        // -- 濡傛灉鏄叧閿瓧锛屽垯杩斿洖鍏抽敭瀛楃被鍨嬬殑 token
-        // -- 鍚﹀垯锛岃繑鍥炴爣璇嗙
+        // 鐏忔繆鐦亸鍡楃摠閸屻劎娈戠€涙顑佹稉鑼缎掗柌濠佽礋閸忔娊鏁€涳拷
+        // -- 婵″倹鐏夐弰顖氬彠闁款喖鐡ч敍灞藉灟鏉╂柨娲栭崗鎶芥暛鐎涙琚崹瀣畱 token
+        // -- 閸氾箑鍨敍宀冪箲閸ョ偞鐖ｇ拠鍡欘儊
         //
-        // Token 鐨� Value 搴斿～鍐欐爣璇嗙鎴栧叧閿瓧鐨勫瓧绗︿覆
+        // Token 閻拷 Value 鎼存柨锝為崘娆愮垼鐠囧棛顑侀幋鏍у彠闁款喖鐡ч惃鍕摟缁楋缚瑕�
     }
 
     private Token lexOperatorOrUnknown() throws TokenizeError {
@@ -126,10 +126,10 @@ public class Tokenizer {
                 return new Token(TokenType.RParen,')',it.previousPos(),it.currentPos());
                 
 
-            // 濉叆鏇村鐘舵�佸拰杩斿洖璇彞
+            // 婵夘偄鍙嗛弴鏉戭樋閻樿埖锟戒礁鎷版潻鏂挎礀鐠囶厼褰�
 
             default:
-                // 涓嶈璇嗚繖涓緭鍏ワ紝鎽镐簡
+                // 娑撳秷顓荤拠鍡氱箹娑擃亣绶崗銉礉閹介晲绨�
                 throw new TokenizeError(ErrorCode.InvalidInput, it.previousPos());
         }
     }
