@@ -285,7 +285,7 @@ public final class Analyser {
                 analyseOutputStatement();
             }
             else if(peeked.getTokenType() == TokenType.Semicolon){
-                continue;
+                next();
             }
             else {
                 // 都不是，摸了
