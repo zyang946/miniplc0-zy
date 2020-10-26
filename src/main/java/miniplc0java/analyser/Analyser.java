@@ -412,9 +412,8 @@ public final class Analyser {
         // 因子 -> 符号? (标识符 | 无符号整数 | '(' 表达式 ')')
 
         boolean negate;
-
-        if (check(TokenType.Minus)) {
-            nextIf(TokenType.Ident);
+        
+        if (nextIf(TokenType.Minus) != null) {
             negate = true;
             // 计算结果需要被 0 减
             instructions.add(new Instruction(Operation.LIT, 0));
@@ -448,6 +447,7 @@ public final class Analyser {
             // 是表达式
             // 调用相应的处理函数
             analyseExpression();
+            expect(TokenType.RParen);
         } else {
             // 都不是，摸了
             throw new ExpectedTokenError(List.of(TokenType.Ident, TokenType.Uint, TokenType.LParen), next());
